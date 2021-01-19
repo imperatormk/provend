@@ -1,0 +1,41 @@
+* DB structure
+
+- VENDOR
+	- VENDOR_ID BIGINT
+	- V_NAME VARCHAR
+	- V_STREET VARCHAR
+	- V_CITY VARCHAR
+	- V_STATE VARCHAR
+	- V_ZIP VARCHAR
+
+- PURCHASE_ORDER
+	- PO_NUMBER BIGINT
+	- RELEASE_DATE DATE
+	- PO_STATUS VARCHAR
+	- PO_AMT CURRENCY
+	- VENDOR_ID BIGINT
+
+- PO_DETAIL
+	- PO_NUMBER BIGINT
+	- PO_LINE_ITEM BIGINT
+	- MATERIAL_ID BIGINT
+	- UNITS VARCHAR
+	- QUANTITY INT
+	- BALANCE INT
+	- PROMISED_DEL_DATE DATE
+	- UNIT_COST CURRENCY
+	- STATUS VARCHAR
+
+* API features
+
+- CRUD vendors
+	- See vendor details
+		- CRUD purchases
+		- See purchase details
+			- CRUD purchase details
+
+- Additional stats
+	- Total $ from date to date
+	- Filter purchases by status
+	- Allow sorting by some numeric values
+	- Consider (simple)(admin) auth
