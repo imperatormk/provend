@@ -64,13 +64,21 @@ return function (RouteCollectorProxy $group) {
 			->withStatus($exists ? 200 : 404);
 	});
 
-	$group->delete('/{id}', function (ServerRequestInterface $request, ResponseInterface $response) {
+	$group->delete('/{id}', function (ServerRequestInterface $request, ResponseInterface $response, array $args) {
 		$id = $args['id'];
-		$item = R::load('purchase', $id);
-		$status = R::trash($item);
+		$purchase = R::load('purchase', $id);
+		$vendor = R::load('vendor', $purchase['vendor_id']);
+		R::preload($vendor, array('ownPurchase' => 'purchase'));
+		$exists = !empty($vendor['ownPurchase'][$id]);
 
-		$response->getBody()->write(json_encode(['success' => $status == 1 ? true : false]));
+		if ($exists) {
+			unset($vendor['ownPurchase'][$id]);
+			R::store($vendor);
+		}
+
+		$response->getBody()->write(json_encode(['success' => $exists]));
 		return $response
-			->withHeader('Content-Type', 'application/json');
+			->withHeader('Content-Type', 'application/json')
+			->withStatus($exists ? 200 : 404);
 	});
 };
