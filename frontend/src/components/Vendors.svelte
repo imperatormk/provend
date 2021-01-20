@@ -1,5 +1,4 @@
 <script>
-import { Link } from 'svelte-routing' 
 import api from '../services/api'
 </script>
 
@@ -12,8 +11,8 @@ import api from '../services/api'
 			<div class="card col-4 mx-1">
 				<div class="card-body">
 					<h5>{vendor.name}</h5>
-					<p>{vendor.city}, {vendor.state}</p>
-					<Link to="/vendors/{vendor.id}">Details</Link>
+					<p>{vendor.street}, {vendor.state}, {vendor.city}, {vendor.zip}</p>
+					<a href="/vendors/{vendor.id}">Details</a>
 				</div>
 			</div>
 		{/each}

@@ -22,7 +22,11 @@ return function (RouteCollectorProxy $group) {
 			$purchase->xownDetailList[] = $item;
 			$id = R::store($purchase);
 
-			$response->getBody()->write(json_encode(array('id' => $id)));
+			$purchase = R::load('purchase', $purchaseId);
+			R::preload($purchase, array('ownDetail' => 'detail'));
+			$detail = end($purchase['ownDetail']);
+
+			$response->getBody()->write(json_encode(array($detail)));
 		} else {
 			$response->getBody()->write(json_encode(array('msg' => 'not_found')));
 		}
@@ -30,15 +34,5 @@ return function (RouteCollectorProxy $group) {
 		return $response
 			->withHeader('Content-Type', 'application/json')
 			->withStatus($exists ? 200 : 404);
-	});
-
-	$group->delete('/{id}', function (ServerRequestInterface $request, ResponseInterface $response, array $args) {
-		$id = $args['id'];
-		$item = R::load('details', $id);
-		$status = R::trash($item);
-
-		$response->getBody()->write(json_encode(['success' => $status == 1 ? true : false]));
-		return $response
-			->withHeader('Content-Type', 'application/json');
 	});
 };

@@ -43,5 +43,25 @@ export default {
         const { data } = err.response
         return Promise.reject(data)
       })
-	}
+  },
+  postPurchaseDetail(purchaseDetail, purchaseId) {
+		const reqObj = {
+			...purchaseDetail,
+			purchase_id: +purchaseId
+		}
+		return http.post('/purchase-details/', reqObj)
+      .then(resp => resp.data)
+      .catch((err) => {
+        const { data } = err.response
+        return Promise.reject(data)
+      })
+  },
+  deletePurchase(id) {
+		return http.delete(`/purchases/${id}`)
+      .then(resp => resp.data)
+      .catch((err) => {
+        const { data } = err.response
+        return Promise.reject(data)
+      })
+	},
 }

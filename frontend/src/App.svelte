@@ -14,13 +14,11 @@ export let url = ''
 <Router url="{url}">
 	<nav class="navbar navbar-light bg-light">
 		<a class="navbar-brand" href="/">ProVend</a>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="/vendors">Vendors</a>
-				</li>
-			</ul>
-		</div>
+		<ul class="navbar-nav">
+			<li class="nav-item active">
+				<a class="nav-link" href="/vendors">Vendors</a>
+			</li>
+		</ul>
 	</nav>
 	<br/><br/>
 	<div class="container">
@@ -28,6 +26,7 @@ export let url = ''
 		<Route path="vendors"><Vendors /></Route>
 		<Route path="/"><Vendors /></Route>
 	</div>
+	<br/><br/>
 </Router>
 
 <style>

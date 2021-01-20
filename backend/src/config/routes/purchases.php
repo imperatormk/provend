@@ -50,7 +50,11 @@ return function (RouteCollectorProxy $group) {
 			$vendor->xownPurchaseList[] = $item;
 			$id = R::store($vendor);
 
-			$response->getBody()->write(json_encode(array('id' => $id)));
+			$vendor = R::load('vendor', $vendorId);
+			R::preload($vendor, array('ownPurchase' => 'purchase'));
+			$purchase = end($vendor['ownPurchase']);
+
+			$response->getBody()->write(json_encode(array($purchase)));
 		} else {
 			$response->getBody()->write(json_encode(array('msg' => 'not_found')));
 		}
