@@ -71,12 +71,16 @@ return function (RouteCollectorProxy $group) {
 		R::preload($vendor, array('ownPurchase' => 'purchase'));
 		$exists = !empty($vendor['ownPurchase'][$id]);
 
+		$status = 0;
 		if ($exists) {
 			unset($vendor['ownPurchase'][$id]);
 			R::store($vendor);
+
+			$purchase = R::load('purchase', $id);
+			$status = R::trash($purchase);
 		}
 
-		$response->getBody()->write(json_encode(['success' => $exists]));
+		$response->getBody()->write(json_encode(['success' => $status == 1 ? true : false]));
 		return $response
 			->withHeader('Content-Type', 'application/json')
 			->withStatus($exists ? 200 : 404);

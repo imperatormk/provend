@@ -163,7 +163,11 @@ function deletePurchase(id) {
 								{/each}
 							</select>
 						</div>
-						<button type="submit" class="btn btn-success">Submit</button>
+						<div class="d-flex">
+							<button type="submit" class="btn btn-success">Submit</button>
+							<span class="px-1"></span>
+							<button type="button" on:click="{() => selectedPurchase = null}" class="btn btn-danger">Cancel</button>
+						</div>
 					</form>
 				</div>
 			</div>
