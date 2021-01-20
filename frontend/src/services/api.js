@@ -23,6 +23,23 @@ export default {
         const { data } = err.response
         return Promise.reject(data)
       })
+  },
+  postVendor(vendor) {
+    const reqObj = { ...vendor }
+    return http.post('/vendors/', reqObj)
+      .then(resp => resp.data)
+      .catch((err) => {
+        const { data } = err.response
+        return Promise.reject(data)
+      })
+  },
+  deleteVendor(id) {
+		return http.delete(`/vendors/${id}`)
+      .then(resp => resp.data)
+      .catch((err) => {
+        const { data } = err.response
+        return Promise.reject(data)
+      })
 	},
 	getPurchaseDetails(id) {
 		return http.get(`/purchases/${id}`)

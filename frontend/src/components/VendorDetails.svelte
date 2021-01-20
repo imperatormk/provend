@@ -1,30 +1,18 @@
 <script>
 import { onMount } from 'svelte'
 import api from '../services/api'
+import templates from '../templates'
 
 let vendor = null
 onMount(async () => {
 	vendor = await api.getOneVendor(id)
 })
 
-let purchaseStates = ['OPEN', 'CLOSED', 'DISPUTE']
+let purchaseStates = [...templates.purchaseStates]
 let selectedPurchase = null
 
-let newPurchase = {
-	amt: 0.01,
-	release_date: new Date().toDateInputValue(),
-	state: purchaseStates[0]
-}
-let newPurchaseDetail = {
-	line_item: '',
-	material_id: '',
-	units: 1,
-	quantity: 1,
-	balance: 0,
-	promised_del_date: new Date().toDateInputValue(),
-	unit_cost: 1,
-	status: purchaseStates[0]
-}
+let newPurchase = {	...templates.purchase }
+let newPurchaseDetail = { ...templates.purchaseDetail }
 
 export let id = null
 
@@ -34,6 +22,7 @@ function postPurchase() {
 			postedPurchase.details = []
 			vendor.purchases = [...vendor.purchases, postedPurchase]
 			selectedPurchase = postedPurchase
+			newPurchase = {	...templates.purchase }
 		})
 }
 
@@ -41,6 +30,7 @@ function postPurchaseDetail() {
 	api.postPurchaseDetail(newPurchaseDetail, selectedPurchase.id)
 		.then(([postedPurchaseDetail]) => {
 			selectedPurchase.details = [...selectedPurchase.details, postedPurchaseDetail]
+			newPurchaseDetail = { ...templates.purchaseDetail }
 		})
 }
 
@@ -48,6 +38,7 @@ function deletePurchase(id) {
 	api.deletePurchase(id)
 		.then(() => {
 			vendor.purchases = vendor.purchases.filter(item => item.id !== id)
+			if (selectedPurchase && selectedPurchase.id === id) selectedPurchase = null
 		})
 }
 </script>
@@ -55,6 +46,7 @@ function deletePurchase(id) {
 <h5><a href="/vendors" class="pr-3">Back</a></h5>
 <h2>Vendor details</h2>
 <br>
+
 <div class="row">
 	<div class="col-4">
 		{#if vendor}
@@ -78,13 +70,11 @@ function deletePurchase(id) {
 							<tbody>
 								{#each vendor.purchases as purchase}
 									<tr>
-										<td><a class="font-weight-bold" on:click="{() => { selectedPurchase = purchase }}" href="{'#'}">{purchase.id}</a></td>
-										<td>{purchase.release_date}</td>
-										<td>{purchase.amt}</td>
-										<td>{purchase.state}</td>
-										<td>
-											<button on:click="{deletePurchase(purchase.id)}" class="btn btn-danger">D</button>
-										</td>
+										<td class="align-middle"><a class="font-weight-bold" on:click="{() => { selectedPurchase = purchase }}" href="{'#'}">{purchase.id}</a></td>
+										<td class="align-middle">{purchase.release_date}</td>
+										<td class="align-middle">{purchase.amt}</td>
+										<td class="align-middle">{purchase.state}</td>
+										<td class="align-middle"><button on:click="{deletePurchase(purchase.id)}" class="btn btn-sm btn-danger">D</button></td>
 									</tr>
 								{/each}
 							</tbody>
@@ -149,9 +139,9 @@ function deletePurchase(id) {
 					<form on:submit|preventDefault="{postPurchaseDetail}">
 						<h4>New purchase detail</h4>
 						<br/>
-						<div class="form-group"><input bind:value="{newPurchaseDetail.line_item}" class="form-control" required placeholder="Line item"></div>
-						<div class="form-group"><input bind:value="{newPurchaseDetail.material_id}" class="form-control" required placeholder="Material ID"></div>
-						<div class="form-group"><input bind:value="{newPurchaseDetail.units}" class="form-control" type="number" min="1" step="1" required placeholder="Units"></div>
+						<div class="form-group"><input bind:value="{newPurchaseDetail.line_item}" class="form-control" type="number" min="1" step="1" required placeholder="Line item"></div>
+						<div class="form-group"><input bind:value="{newPurchaseDetail.material_id}" class="form-control" type="number" min="1" step="1" required placeholder="Material ID"></div>
+						<div class="form-group"><input bind:value="{newPurchaseDetail.units}" class="form-control" required placeholder="Units"></div>
 						<div class="form-group"><input bind:value="{newPurchaseDetail.quantity}" class="form-control" type="number" min="1" step="1" required placeholder="Quantity"></div>
 						<div class="form-group"><input bind:value="{newPurchaseDetail.balance}" class="form-control" type="number" step="0.1" required placeholder="Balance"></div>
 						<div class="form-group"><input bind:value="{newPurchaseDetail.promised_del_date}" class="form-control" type="date" required placeholder="Promised deletion date"></div>
