@@ -18,7 +18,7 @@ export let id = null
 
 function postPurchase() {
 	api.postPurchase(newPurchase, id)
-		.then(([postedPurchase]) => {
+		.then((postedPurchase) => {
 			postedPurchase.details = []
 			vendor.purchases = [...vendor.purchases, postedPurchase]
 			selectedPurchase = postedPurchase
@@ -28,7 +28,7 @@ function postPurchase() {
 
 function postPurchaseDetail() {
 	api.postPurchaseDetail(newPurchaseDetail, selectedPurchase.id)
-		.then(([postedPurchaseDetail]) => {
+		.then((postedPurchaseDetail) => {
 			selectedPurchase.details = [...selectedPurchase.details, postedPurchaseDetail]
 			newPurchaseDetail = { ...templates.purchaseDetail }
 		})

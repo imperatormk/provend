@@ -2,7 +2,7 @@ import http from './http'
 
 export default {
   getVendors() {
-    return http.get('/vendors/')
+    return http.get('/vendors.php')
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -10,7 +10,7 @@ export default {
       })
 	},
 	getOneVendor(id) {
-    return http.get(`/vendors/${id}`)
+    return http.get('/vendors.php', { params: { id, subentity: 'purchase' } })
 			.then(resp => resp.data)
 			.then(async (vendor) => {
 				const purchasesWithDetails = await Promise.all(vendor.purchases.map(purchase => this.getPurchaseDetails(purchase.id)))
@@ -26,7 +26,7 @@ export default {
   },
   postVendor(vendor) {
     const reqObj = { ...vendor }
-    return http.post('/vendors/', reqObj)
+    return http.post('/vendors.php', reqObj)
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -34,7 +34,7 @@ export default {
       })
   },
   deleteVendor(id) {
-		return http.delete(`/vendors/${id}`)
+		return http.delete('/vendors.php?id=${id}', { params: { id } })
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -42,7 +42,7 @@ export default {
       })
 	},
 	getPurchaseDetails(id) {
-		return http.get(`/purchases/${id}`)
+		return http.get(`/purchases.php`, { params: { id, subentity: 'detail' } })
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -54,7 +54,7 @@ export default {
 			...purchase,
 			vendor_id: +vendorId
 		}
-		return http.post('/purchases/', reqObj)
+		return http.post('/purchases.php', reqObj)
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -66,7 +66,7 @@ export default {
 			...purchaseDetail,
 			purchase_id: +purchaseId
 		}
-		return http.post('/purchase-details/', reqObj)
+		return http.post('/details.php', reqObj)
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
@@ -74,7 +74,7 @@ export default {
       })
   },
   deletePurchase(id) {
-		return http.delete(`/purchases/${id}`)
+    return http.delete('/purchases.php?id=${id}', { params: { id } })
       .then(resp => resp.data)
       .catch((err) => {
         const { data } = err.response
