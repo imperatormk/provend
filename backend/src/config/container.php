@@ -15,7 +15,7 @@ return [
 	},
 
 	App::class => function (ContainerInterface $container) {
-		R::setup('mysql:host=localhost;dbname=indinf', 'darko', 'pece123!');
+		R::setup('mysql:host=localhost;dbname=provend', 'darko', 'pece123!');
 		AppFactory::setContainer($container);
 		return AppFactory::create();
 	},
