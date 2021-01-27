@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('RequiredSafely')) http_response_code(500);
+
 function prepareQueryParams($querystr) {
 	$queries = [];
 	parse_str($querystr, $queries);
